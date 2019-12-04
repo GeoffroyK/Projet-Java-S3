@@ -1,0 +1,12 @@
+.html;<!DOCTYPE html>;text/html
+.sh;#!/bin/;application/x-shell
+.zip;PK;application/zip
+.png;PNG;image/png
+.docx;PK;application/vnd.openxmlformats-officedocument.wordprocessingml.document
+.xlsx;PK;application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+.pptx;PK;application/vnd.openxmlformats-officedocument.presentationml.presentation
+.odt;PK;application/vnd.oasis.opendocument.text
+.ods;PK;application/vnd.oasis.opendocument.spreadsheet
+.odp;PK;application/vnd.oasis.opendocument.presentation
+.txt;;text/plain
+.jpg;FF D8 FF E0;image/jpeg
