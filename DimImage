@@ -1,0 +1,23 @@
+package test2projet;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class DimImage {
+		
+	private BufferedImage image;
+		
+	public DimImage(Informations i) throws IOException {
+		File f = i.getFile();
+		BufferedImage image = ImageIO.read(f);
+		this.image = image;
+	}
+		
+	public String toString () {
+		return "Largeur= " + this.image.getWidth() + ", Hauteur= " + this.image.getHeight();
+	}
+}
+
