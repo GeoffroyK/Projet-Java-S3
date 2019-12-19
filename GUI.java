@@ -7,7 +7,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -65,7 +64,6 @@ public class GUI extends JFrame {
 
 	private class ArboParcoursAction implements ActionListener {
 
-		Scanner sc = new Scanner(System.in);
 		String lien = null;
 		
 		@Override
@@ -79,7 +77,6 @@ public class GUI extends JFrame {
 
 	 private class ScanAction implements ActionListener {
 
-		Scanner sc = new Scanner(System.in);
 		String lien = null;
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -99,7 +96,7 @@ public class GUI extends JFrame {
 	}
 
 	private class SaveAction implements ActionListener {
-		Scanner sc = new Scanner(System.in);
+
 		String lien = null;
 		@Override
 		public void actionPerformed(ActionEvent e) {
