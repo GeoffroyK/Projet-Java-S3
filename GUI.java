@@ -49,8 +49,8 @@ public class GUI extends JFrame {
 		contentPane.setLayout(border);
 		
 		rightPanel.setLayout(new GridLayout(5, 1));
-		rightPanel.add(arboParcours);
 		rightPanel.add(scan);
+		rightPanel.add(arboParcours);
 		rightPanel.add(save);
 		rightPanel.add(aide);
 		rightPanel.add(browse);
@@ -76,8 +76,8 @@ public class GUI extends JFrame {
 		
 		System.out.println("Saississez le lien");
 		lien = linkField.getText();
-		FilesWalk f = new FilesWalk(lien);	
-		analyseField.setText(String.valueOf(f.toString()));
+		FilesWalk2 f = new FilesWalk2(lien);	
+		analyseField.setText(f.toString());
 		}
 	}
 
@@ -88,12 +88,13 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Saississez le lien");
  			lien = linkField.getText();
- 			Informations i = new Informations(lien);
+ 			Informations2 i = new Informations2(lien);
  			System.out.println(i);
-				Database d = new Database(i.getFileExt());
+				Database2 d = new Database2(i.getFileExt());
 				try {
-				Compare c = new Compare(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
+				Compare2 c = new Compare2(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
 				System.out.println(c);
+				analyseField.setText(i.toString() + d.researchMime() + d.researchSign() + c.toString());
 				} catch (IOException e1) {
 				System.err.println(e1.getMessage());
 			}
@@ -108,15 +109,16 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Saississez le lien");
  			lien = linkField.getText();;
- 			Informations i = new Informations(lien);
+ 			Informations2 i = new Informations2(lien);
  			System.out.println(i);
-				Database d = new Database(i.getFileExt());
+				Database2 d = new Database2(i.getFileExt());
 				try {
-				Compare c = new Compare(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
+				Compare2 c = new Compare2(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
 				System.out.println(c);
-				Saving s = new Saving(i, c);
-				Serialization ser = new Serialization(s);
+				Saving2 s = new Saving2(i, c);
+				Serialization2 ser = new Serialization2(s);
 				ser.serializationSave();
+				analyseField.setText("Sauvegarde effectuée");
 				System.out.println("Sauvegarde effectuée");
 				} catch (IOException e1) {
 				System.err.println(e1.getMessage());
