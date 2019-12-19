@@ -16,11 +16,14 @@ import javax.swing.JTextField;
 
 
 public class GUI extends JFrame {
-	private JLabel valueLabel = new JLabel("Veuillez entrer un lien dans la console et appuyer sur l'un des boutons pour effectuer l'action associée.");
-	private JTextField linkField = new JTextField(5);
+	private JLabel valueLabel = new JLabel("Veuillez entrer un lien dans la zone de texte de droite et appuyer sur l'un des boutons pour effectuer l'action associée.");
+	private JTextField linkField = new JTextField(30);
+	private JTextField analyseField = new JTextField(30);
 	private JButton arboParcours = new JButton("Parcours d'arborescence");
 	private JButton scan = new JButton("Scanner");
 	private JButton save = new JButton("Sauvegarder");
+	private JButton aide = new JButton("Aide");
+	private JButton browse = new JButton("Browse");
 	private JButton quitButton = new JButton("Quitter");
 	private JPanel rightPanel = new JPanel();
 	
@@ -45,14 +48,16 @@ public class GUI extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(border);
 		
-		rightPanel.setLayout(new GridLayout(3, 1));
+		rightPanel.setLayout(new GridLayout(5, 1));
 		rightPanel.add(arboParcours);
 		rightPanel.add(scan);
 		rightPanel.add(save);
+		rightPanel.add(aide);
+		rightPanel.add(browse);
 		contentPane.add(BorderLayout.EAST, rightPanel);
-		
 		contentPane.add(BorderLayout.NORTH, valueLabel);
-		contentPane.add(BorderLayout.CENTER, linkField);
+		contentPane.add(BorderLayout.WEST, linkField);
+		contentPane.add(BorderLayout.CENTER, analyseField);
 		contentPane.add(BorderLayout.SOUTH, quitButton);
 		
 		
@@ -72,6 +77,7 @@ public class GUI extends JFrame {
 		System.out.println("Saississez le lien");
 		lien = linkField.getText();
 		FilesWalk f = new FilesWalk(lien);	
+		analyseField.setText(String.valueOf(f.toString()));
 		}
 	}
 
@@ -132,6 +138,18 @@ public class GUI extends JFrame {
 		}
 
 	}  
+	
+	private class AideAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
+	
+	private class BrowseAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+		}
+	}
 
 	public static void main(String[] args) {
 		new GUI("GUI");
