@@ -4,6 +4,7 @@ package project;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.GridLayout;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -14,12 +15,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 
 public class GUI extends JFrame {
-	private JLabel valueLabel = new JLabel("Veuillez entrer un lien dans la console et appuyer sur l'un des boutons pour effectuer l'action associée.");
+	private JLabel valueLabel = new JLabel("Veuillez entrer un lien dans la zone de texte de gauche et appuyer sur l'un des boutons pour effectuer l'action associée.");
 	private JTextField linkField = new JTextField(30);
+	private JTextArea analyseField = new JTextArea();
 	private JButton arboParcours = new JButton("Parcours d'arborescence");
 	private JButton scan = new JButton("Scanner");
 	private JButton save = new JButton("Sauvegarder");
@@ -27,10 +30,6 @@ public class GUI extends JFrame {
 	private JButton browse = new JButton("Browse");
 	private JButton quitButton = new JButton("Quitter");
 	private JPanel rightPanel = new JPanel();
-	
-	/**
-	 * This is the model in MVC (model-view-controller).
-	 */
 
 	public GUI(String title) {
 		super(title);
@@ -60,7 +59,8 @@ public class GUI extends JFrame {
 		contentPane.add(BorderLayout.EAST, rightPanel);
 		
 		contentPane.add(BorderLayout.NORTH, valueLabel);
-		contentPane.add(BorderLayout.CENTER, linkField);
+		contentPane.add(BorderLayout.WEST, linkField);
+		contentPane.add(BorderLayout.CENTER, analyseField);
 		contentPane.add(BorderLayout.SOUTH, quitButton);
 		
 		
@@ -71,18 +71,19 @@ public class GUI extends JFrame {
 	}
 
 	private class ArboParcoursAction implements ActionListener {
-
+		String tmp = null;
 		String lien = null;
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 		
-		System.out.println("Saississez le lien");
 		lien = linkField.getText();
 		FilesWalk f = new FilesWalk(lien);
 		try {
 			f.start();
 			f.getAllFiles();
+			tmp += f.toString();
+			analyseField.setText(tmp);
 		} catch (IOException e1) {
 			System.err.println(e1);
 		}
@@ -95,7 +96,6 @@ public class GUI extends JFrame {
 		String lien = null;
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Saississez le lien");
  			lien = linkField.getText();
  			Informations i = new Informations(lien);
  			tmp += i.toString();
@@ -103,7 +103,7 @@ public class GUI extends JFrame {
 				Database d = new Database(i.getFileExt());
 				Compare c = new Compare(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
 				tmp += c.toString();
-				linkField.setText(tmp);
+				analyseField.setText(tmp);
 				} catch (IOException e1) {
 				System.err.println(e1.getMessage());
 			}
@@ -112,22 +112,20 @@ public class GUI extends JFrame {
 	}
 
 	private class SaveAction implements ActionListener {
-
+		String tmp = null;
 		String lien = null;
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Saississez le lien");
  			lien = linkField.getText();;
  			Informations i = new Informations(lien);
- 			System.out.println(i);
 				try {
 				Database d = new Database(i.getFileExt());
 				Compare c = new Compare(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
-				System.out.println(c);
 				Saving s = new Saving(i, c);
 				Serialization ser = new Serialization(s,"nouveau");
 				ser.serializationSave();
-				System.out.println("Sauvegarde effectuée");
+				tmp += ser.serializationSave();
+				analyseField.setText(tmp);
 				} catch (IOException e1) {
 				System.err.println(e1.getMessage());
 			}
@@ -167,4 +165,7 @@ public class GUI extends JFrame {
 		}
 
 	}  	
+	public static void main(String[] args) {
+		new GUI("GUI");
+	} 
 }

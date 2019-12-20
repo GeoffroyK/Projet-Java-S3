@@ -1,25 +1,34 @@
-package test2projet;
+package project;
+
+
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-public class Serialization {
-	private Saving save;
-	Serialization(Saving save) {
-		this.save = save;
+
+public class Serialization extends FilesWalk {
+	private String filename = "C:\\Users\\lespi\\Desktop\\Dostemoin\\";
+	
+	Serialization(Saving save, String filename) {
+		super(filename);
+		this.filename += filename;
 	}
-	public void serializationSave(String fileName) {
+	
+	public String serializationSave() {
 		ObjectOutputStream stream;
 		try {
-			stream = new ObjectOutputStream(new FileOutputStream(fileName));
-			stream.writeObject(save);
+			stream = new ObjectOutputStream(new FileOutputStream(filename));
+			for (Saving save : getSavings()) {
+				stream.writeObject(save);
+			}
 			stream.close();
+			return filename + "a été sérialisé avec succès.";
 		} catch (FileNotFoundException e) {
-			System.err.println(e.getMessage());
+			return e.getMessage();
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			return e.getMessage();
 		}
-	}
+	}	
 }
