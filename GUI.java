@@ -9,16 +9,17 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 
 public class GUI extends JFrame {
-	private JLabel valueLabel = new JLabel("Veuillez entrer un lien dans la zone de texte de droite et appuyer sur l'un des boutons pour effectuer l'action associée.");
+	private JLabel valueLabel = new JLabel("Veuillez entrer un lien dans la console et appuyer sur l'un des boutons pour effectuer l'action associée.");
 	private JTextField linkField = new JTextField(30);
-	private JTextField analyseField = new JTextField(30);
 	private JButton arboParcours = new JButton("Parcours d'arborescence");
 	private JButton scan = new JButton("Scanner");
 	private JButton save = new JButton("Sauvegarder");
@@ -39,6 +40,8 @@ public class GUI extends JFrame {
 		arboParcours.addActionListener(new ArboParcoursAction());
 		scan.addActionListener(new ScanAction());
 		save.addActionListener(new SaveAction());
+		aide.addActionListener(new AideAction());
+		browse.addActionListener(new BrowseAction());
 		quitButton.addActionListener(new QuitAction(this)); 
 		
 	}
@@ -48,16 +51,16 @@ public class GUI extends JFrame {
 		Container contentPane = getContentPane();
 		contentPane.setLayout(border);
 		
-		rightPanel.setLayout(new GridLayout(5, 1));
-		rightPanel.add(scan);
+		rightPanel.setLayout(new GridLayout(3, 2));
 		rightPanel.add(arboParcours);
+		rightPanel.add(scan);
 		rightPanel.add(save);
 		rightPanel.add(aide);
 		rightPanel.add(browse);
 		contentPane.add(BorderLayout.EAST, rightPanel);
+		
 		contentPane.add(BorderLayout.NORTH, valueLabel);
-		contentPane.add(BorderLayout.WEST, linkField);
-		contentPane.add(BorderLayout.CENTER, analyseField);
+		contentPane.add(BorderLayout.CENTER, linkField);
 		contentPane.add(BorderLayout.SOUTH, quitButton);
 		
 		
@@ -76,25 +79,31 @@ public class GUI extends JFrame {
 		
 		System.out.println("Saississez le lien");
 		lien = linkField.getText();
-		FilesWalk2 f = new FilesWalk2(lien);	
-		analyseField.setText(f.toString());
+		FilesWalk f = new FilesWalk(lien);
+		try {
+			f.start();
+			f.getAllFiles();
+		} catch (IOException e1) {
+			System.err.println(e1);
+		}
+		
 		}
 	}
 
 	 private class ScanAction implements ActionListener {
-
+		String tmp = null;
 		String lien = null;
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Saississez le lien");
  			lien = linkField.getText();
- 			Informations2 i = new Informations2(lien);
- 			System.out.println(i);
-				Database2 d = new Database2(i.getFileExt());
+ 			Informations i = new Informations(lien);
+ 			tmp += i.toString();
 				try {
-				Compare2 c = new Compare2(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
-				System.out.println(c);
-				analyseField.setText(i.toString() + d.researchMime() + d.researchSign() + c.toString());
+				Database d = new Database(i.getFileExt());
+				Compare c = new Compare(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
+				tmp += c.toString();
+				linkField.setText(tmp);
 				} catch (IOException e1) {
 				System.err.println(e1.getMessage());
 			}
@@ -109,16 +118,15 @@ public class GUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("Saississez le lien");
  			lien = linkField.getText();;
- 			Informations2 i = new Informations2(lien);
+ 			Informations i = new Informations(lien);
  			System.out.println(i);
-				Database2 d = new Database2(i.getFileExt());
 				try {
-				Compare2 c = new Compare2(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
+				Database d = new Database(i.getFileExt());
+				Compare c = new Compare(i.getMimeType(),d.researchMime(),i.getSign(),d.researchSign());
 				System.out.println(c);
-				Saving2 s = new Saving2(i, c);
-				Serialization2 ser = new Serialization2(s);
+				Saving s = new Saving(i, c);
+				Serialization ser = new Serialization(s,"nouveau");
 				ser.serializationSave();
-				analyseField.setText("Sauvegarde effectuée");
 				System.out.println("Sauvegarde effectuée");
 				} catch (IOException e1) {
 				System.err.println(e1.getMessage());
@@ -126,7 +134,26 @@ public class GUI extends JFrame {
 		}
 
 	}
-
+	
+	private class AideAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane help = new JOptionPane();
+			help.showMessageDialog(null, "Là tu écris ce que tu veux mettre dans l'aide", "Aide", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	private class BrowseAction implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+	        int returnVal = chooser.showOpenDialog(getParent());
+	        if(returnVal == JFileChooser.APPROVE_OPTION) {
+	            linkField.setText(chooser.getSelectedFile().getPath());
+	        }
+		}
+	}
+	
 	private class QuitAction implements ActionListener {
 		private JFrame window;
 
@@ -139,22 +166,5 @@ public class GUI extends JFrame {
 			window.dispose();
 		}
 
-	}  
-	
-	private class AideAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
-	
-	private class BrowseAction implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-		}
-	}
-
-	public static void main(String[] args) {
-		new GUI("GUI");
-	} 
-	
+	}  	
 }
